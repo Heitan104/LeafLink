@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+
+    <style>
+        html, body {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        #map-canvas {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map-canvas"></div>
+
+    <!-- Include the Google Maps API script with your API key -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUm6__AgFwtZ_2ZBge5a5WW2XMHJvn1qg"></script>
+
+    <!-- Your JavaScript code -->
+    <script>
+        (function(window, google) {
+            var options = {
+                center: { lat: 43.6532, lng: -79.3832 },
+                zoom: 10
+            };
+
+            var element = document.getElementById('map-canvas');
+            var map = new google.maps.Map(element, options);
+
+            /*var marker1 = new google.maps.Marker({
+                position: { lat: 43.2609, lng: -79.9192 },
+                map: map,
+                title: 'Tarans Location: Mc Master Uni'
+            });
+
+            var marker2 = new google.maps.Marker({
+                position: { lat: 45.3876, lng: -75.6960 },
+                map: map,
+                title: 'Ambers Location: Carleton Uni'
+            });
+            */
+
+            var theString = new google.maps.Polyline({
+                path: [marker1.getPosition(), marker2.getPosition()],
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+
+            theString.setMap(map);
+        }(window, google));
+    </script>
+</body>
+</html>
