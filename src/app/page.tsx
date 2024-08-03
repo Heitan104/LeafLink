@@ -1,11 +1,55 @@
-import React from 'react'
+import React from 'react';
+import { Button } from "@/components/ui/button";
+import Header from "@/components/ui/header";
+import Footer from "@/components/ui/footer";
 
-const page = () => {
+const Page = () => {
   return (
     <>
-      <div>page</div>
+    {/* Header */}
+    <Header />
+    <div
+    // Background Image
+    className="relative min-h-screen bg-cover bg-center"
+    style={{
+      backgroundImage: 'url(/background2.jpg)',
+      // backgroundSize: 'cover',
+      // backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}
+    >
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+
+        {/* Heading */}
+        <div className="mt-20">
+          <h1 className="text-8xl font-bold text-white">LeafLink</h1>
+        </div>
+
+        {/* space */}
+        <div className="mb-20"></div>
+
+        {/* Additional Content */}
+        <div className="py-16 px-4">
+          <p className="text-center text-white">
+            {/* Add more content here */}
+            Description Here
+          </p>
+        </div>
+
+        {/* space */}
+        <div className="mb-20"></div>
+
+        {/* Get Started Today Button */}
+        <Button className="bg-green-900 text-white py-6 px-10 rounded">
+          Get Started Today
+        </Button>
+      </div>
+    </div>
+
+    {/* Add Footer */}
+    <Footer />
     </>
-  )
+  );
 }
 
-export default page 
+export default Page;
