@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+
+    <style>
+        html, body {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        #map-canvas {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map-canvas"></div>
+
+    <!-- Include the Google Maps API script with your API key -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUm6__AgFwtZ_2ZBge5a5WW2XMHJvn1qg&libraries=places"></script>
+
+    <!-- Your JavaScript code -->
+    <script>
+        let map;
+
+        async function initMap() {
+            const { Map } = await google.maps.importLibrary("maps");
+            const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker",);
+            
+            // Create a map centered on a default location
+            const defaultLocation = { lat: -34.397, lng: 150.644 };
+            const map = new google.maps.Map(document.getElementById("map-canvas"), {
+                center: defaultLocation,
+                zoom: 15,
+            });
+
+
+            const treeIMG = document.createElement("img");
+            
+            const icons = {
+                plantingAreas:{
+                icon: 'C:\Users\amber\tree-plant-bot\tree.png',
+                }
+            }
+            
+            const POIs = [
+                { name: 'POI 1', location: { lat: 43.697720, lng: -79.357467 }, type: "plantingAreas"  },
+                { name: 'POI 2', location: { lat: 43.666374, lng: -79.362349 }, type: "plantingAreas" },
+                { name: 'POI 3', location: { lat: 43.690536, lng: -79.370251 }, type: "plantingAreas" }
+            ];
+
+            POIs.forEach(poi => {
+                createMarker(poi, map, icons[poi.type].icon);
+            });
+
+
+             // Add markers for each POI
+             POIs.forEach(poi => {
+                createMarker(poi, map);
+            });
+
+            // Try HTML5 geolocation
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+
+                        // Center the map on the user's location
+                        map.setCenter(pos);
+
+                        // Add a marker at the user's location
+                        new google.maps.Marker({
+                            position: pos,
+                            map: map,
+                        });
+
+                        // Find POIs within a specified radius
+                        findPOIs(map, pos);
+                    },
+                    () => {
+                        handleLocationError(true, map.getCenter());
+                    }
+                );
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, map.getCenter());
+            }
+        }
+
+        function handleLocationError(browserHasGeolocation, pos) {
+            const infoWindow = new google.maps.InfoWindow({
+                position: pos,
+            });
+            infoWindow.setContent(
+                browserHasGeolocation
+                    ? "Error: The Geolocation service failed."
+                    : "Error: Your browser doesn't support geolocation."
+            );
+            infoWindow.open(map);
+        }
+        
+
+        function findPOIs(map, location) {
+            const service = new google.maps.places.PlacesService(map);
+            const radius = 5000; // Radius in meters
+
+            /* Define the request
+            const request = {
+                location: location,
+                radius: radius,
+                type: ["store"], // Change this to the type of POIs you want to display
+            };
+            */
+
+            // Perform the nearby search
+            service.nearbySearch(request, (results, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    for (let i = 0; i < results.length; i++) {
+                        createMarker(results[i], map);
+                    }
+                }
+            });
+        }
+
+        function createMarker(poi, map) {
+            const marker = new google.maps.Marker({
+                map: map,
+                position: poi.location,
+                title: poi.name
+            });
+
+            // Add an info window to each marker
+            const infoWindow = new google.maps.InfoWindow();
+            google.maps.event.addListener(marker, "click", () => {
+                infoWindow.setContent(poi.name);
+                infoWindow.open(map, marker);
+            });
+        }
+
+        // Load the map when the window loads
+        window.onload = initMap;
+    </script>
+</body>
+</html>
