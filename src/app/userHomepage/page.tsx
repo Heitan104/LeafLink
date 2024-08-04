@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
-const Page = () => {
+const UserHomepage = () => {
   return (
     <>
       {/* Header */}
@@ -51,4 +51,4 @@ const Page = () => {
   );
 }
 
-export default Page;
+export default UserHomepage;
