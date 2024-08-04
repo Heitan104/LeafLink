@@ -1,9 +1,15 @@
-import React from 'react'
+import Image from "next/image";
+import React from "react";
 
 const Leaderboard = () => {
   return (
-    <div>Leaderboard</div>
-  )
-}
+    <div className="relative min-h-screen bg-cover bg-center"
+      style={{
+          backgroundImage: 'url(/leaderboard.png)',
+          backgroundRepeat: 'no-repeat'
+        }}
+       > </div>
+  );
+};
 
-export default Leaderboard
+export default Leaderboard;
