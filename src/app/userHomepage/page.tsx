@@ -10,7 +10,7 @@ const Page = () => {
   return (
     <>
       {/* Header */}
-      <Header />
+      <Header title={"TerraTree24"}/>
 
       {/* Background */}
       <div

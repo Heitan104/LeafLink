@@ -12,7 +12,7 @@ const UserHomepage = () => {
 
   return (
     <>
-      <Header />
+      <Header title={"Welcome"}/>
       <div
         className="relative min-h-screen bg-cover bg-center"
         style={{
