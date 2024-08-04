@@ -50,13 +50,6 @@ const Page = () => {
         <div className="flex flex-col items-center justify-center h-full text-center">
           {/* Trees Planted */}
 
-          {/* Additional Content */}
-          <div className="py-10 px-4">
-            <p className="text-center text-white">
-              {/* Add more content here */}
-              Trees Planted: 5
-            </p>
-          </div>
         </div>
       </div>
 
