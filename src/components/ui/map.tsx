@@ -9,6 +9,11 @@ const defaultMapContainerStyle = {
   borderRadius: '15px 0px 0px 15px',
 };
 
+const defaultMapCenter = {
+  lat: 47.02091,
+  lng: -74.72125
+};
+
 const defaultMapZoom = 15;
 
 const defaultMapOptions = {
@@ -21,8 +26,9 @@ const defaultMapOptions = {
 const parkIcon = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
 const storeIcon = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
 
-const MapComponent: React.FC<{ userLocation: { lat: number; lng: number } | null }> = ({ userLocation }) => {
+const MapComponent: React.FC = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [currentPosition, setCurrentPosition] = useState<google.maps.LatLngLiteral | null>(null);
   const [markers, setMarkers] = useState<Array<{ position: google.maps.LatLngLiteral; name?: string; icon: string }>>([]);
   const [selectedPlace, setSelectedPlace] = useState<{ position: google.maps.LatLngLiteral; name?: string } | null>(null);
 
@@ -44,16 +50,34 @@ const MapComponent: React.FC<{ userLocation: { lat: number; lng: number } | null
       { position: { lat: 47.00679, lng: -74.77887 }, icon: parkIcon }
     ];
     setMarkers(parkMarkers);
+  }, []);
 
-    if (userLocation) {
-      const pos = {
-        lat: userLocation.lat,
-        lng: userLocation.lng,
-      };
-      map.setCenter(pos);
-      findPOIs(map, pos);
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setCurrentPosition(pos);
+          if (map) {
+            map.setCenter(pos);
+            findPOIs(map, pos);
+          }
+        },
+        () => {
+          if (map) {
+            handleLocationError(true, map.getCenter()!);
+          }
+        }
+      );
+    } else {
+      if (map) {
+        handleLocationError(false, map.getCenter()!);
+      }
     }
-  }, [userLocation]);
+  }, [map]);
 
   const findPOIs = (map: google.maps.Map, location: google.maps.LatLngLiteral) => {
     const service = new window.google.maps.places.PlacesService(map);
@@ -95,7 +119,7 @@ const MapComponent: React.FC<{ userLocation: { lat: number; lng: number } | null
     <div className="w-full">
       <GoogleMap
         mapContainerStyle={defaultMapContainerStyle}
-        center={userLocation || { lat: 43.6532, lng: -79.3832 }}  // Default center if no user location
+        center={currentPosition || defaultMapCenter}
         zoom={defaultMapZoom}
         options={defaultMapOptions}
         onLoad={onLoad}
@@ -116,9 +140,9 @@ const MapComponent: React.FC<{ userLocation: { lat: number; lng: number } | null
             <div>{selectedPlace.name}</div>
           </InfoWindow>
         )}
-        {userLocation && (
+        {currentPosition && (
           <Marker
-            position={userLocation}
+            position={currentPosition}
             icon="https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
           />
         )}
@@ -127,38 +151,4 @@ const MapComponent: React.FC<{ userLocation: { lat: number; lng: number } | null
   );
 };
 
-const TestGeolocation: React.FC = () => {
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-
-  const getUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLocation({ lat: latitude, lng: longitude });
-        },
-        (error) => {
-          console.error("Error getting user location: ", error);
-        }
-      );
-    } else {
-      console.log("Geolocation is not supported by this browser");
-    }
-  };
-
-  return (
-    <>
-      <button onClick={getUserLocation}>Get User Location</button>
-      {userLocation && (
-        <div>
-          <h2>User Location</h2>
-          <p>Latitude: {userLocation.lat}</p>
-          <p>Longitude: {userLocation.lng}</p>
-        </div>
-      )}
-      <MapComponent userLocation={userLocation} />
-    </>
-  );
-};
-
-export default TestGeolocation;
+export default MapComponent;
