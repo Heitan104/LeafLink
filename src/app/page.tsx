@@ -7,12 +7,12 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 
 
-const UserHomepage = () => {
+const Index = () => {
   
 
   return (
     <>
-      <Header />
+      <Header title={"Welcome"}/>
       <div
         className="relative min-h-screen bg-cover bg-center"
         style={{
@@ -27,7 +27,7 @@ const UserHomepage = () => {
           <div className="mb-20"></div>
           <div className="py-16 px-4">
             <p className="text-center text-white">
-              Description Here
+            With LeafLink, plant trees nearby and make a global impact.
             </p>
           </div>
           <div className="mb-20"></div>
@@ -43,19 +43,8 @@ const UserHomepage = () => {
   );
 }
 
-export default UserHomepage;
+export default Index;
 
-// import { MapProvider } from "@/providers/map-provider";
-// import MapComponent from "@/components/ui/map";
 
-// export default function Home() {
-//   return (
-//     <MapProvider>
-//       <main>
-//         <MapComponent />
-//       </main>
-//     </MapProvider>
-//   );
-// }
 
 // npm run dev
