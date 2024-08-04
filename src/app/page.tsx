@@ -55,17 +55,19 @@ const Page = () => {
   );
 }
 
-import { MapProvider } from "@/providers/map-provider";
-import MapComponent from "@/components/ui/map";
+export default Page;
 
-export default function Home() {
-  return (
-    <MapProvider>
-      <main>
-        <MapComponent />
-      </main>
-    </MapProvider>
-  );
-}
+// import { MapProvider } from "@/providers/map-provider";
+// import MapComponent from "@/components/ui/map";
+
+// export default function Home() {
+//   return (
+//     <MapProvider>
+//       <main>
+//         <MapComponent />
+//       </main>
+//     </MapProvider>
+//   );
+// }
 
 // npm run dev
