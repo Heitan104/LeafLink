@@ -9,11 +9,6 @@ const defaultMapContainerStyle = {
   borderRadius: '15px 0px 0px 15px',
 };
 
-const defaultMapCenter = {
-  lat: 43.6532,
-  lng: -79.3832
-};
-
 const defaultMapZoom = 15;
 
 const defaultMapOptions = {
@@ -22,41 +17,43 @@ const defaultMapOptions = {
   gestureHandling: 'auto'
 };
 
-const MapComponent: React.FC = () => {
+// Custom icons
+const parkIcon = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+const storeIcon = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
+
+const MapComponent: React.FC<{ userLocation: { lat: number; lng: number } | null }> = ({ userLocation }) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [currentPosition, setCurrentPosition] = useState<google.maps.LatLngLiteral | null>(null);
-  const [markers, setMarkers] = useState<Array<{ position: google.maps.LatLngLiteral; name?: string }>>([]);
+  const [markers, setMarkers] = useState<Array<{ position: google.maps.LatLngLiteral; name?: string; icon: string }>>([]);
   const [selectedPlace, setSelectedPlace] = useState<{ position: google.maps.LatLngLiteral; name?: string } | null>(null);
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
 
-    const beachMarkers = [
-      { position: { lat: 43.697720, lng: -79.357467 } },
-      { position: { lat: 43.666374, lng: -79.362349 } },
-      { position: { lat: 43.690536, lng: -79.370251 } }
+    const parkMarkers = [
+      { position: { lat: 44.62957, lng: -78.50563 }, icon: parkIcon },
+      { position: { lat: 44.65706, lng: -78.55425 }, icon: parkIcon },
+      { position: { lat: 43.79082, lng: -80.03764 }, icon: parkIcon },
+      { position: { lat: 47.02856, lng: -74.74675 }, icon: parkIcon },
+      { position: { lat: 47.01706, lng: -74.74957 }, icon: parkIcon },
+      { position: { lat: 46.98853, lng: -74.74478 }, icon: parkIcon },
+      { position: { lat: 46.99606, lng: -74.71910 }, icon: parkIcon },
+      { position: { lat: 47.01031, lng: -74.74675 }, icon: parkIcon },
+      { position: { lat: 47.01706, lng: -74.69867 }, icon: parkIcon },
+      { position: { lat: 47.02185, lng: -74.68032 }, icon: parkIcon },
+      { position: { lat: 47.05096, lng: -74.68360 }, icon: parkIcon },
+      { position: { lat: 47.00679, lng: -74.77887 }, icon: parkIcon }
     ];
-    setMarkers(beachMarkers);
+    setMarkers(parkMarkers);
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setCurrentPosition(pos);
-          map.setCenter(pos);
-          findPOIs(map, pos);
-        },
-        () => {
-          handleLocationError(true, map.getCenter()!);
-        }
-      );
-    } else {
-      handleLocationError(false, map.getCenter()!);
+    if (userLocation) {
+      const pos = {
+        lat: userLocation.lat,
+        lng: userLocation.lng,
+      };
+      map.setCenter(pos);
+      findPOIs(map, pos);
     }
-  }, []);
+  }, [userLocation]);
 
   const findPOIs = (map: google.maps.Map, location: google.maps.LatLngLiteral) => {
     const service = new window.google.maps.places.PlacesService(map);
@@ -74,7 +71,8 @@ const MapComponent: React.FC = () => {
           .filter(result => result.geometry && result.geometry.location)
           .map(result => ({
             position: result.geometry!.location!.toJSON(),
-            name: result.name
+            name: result.name,
+            icon: storeIcon
           }));
         setMarkers(markers => [...markers, ...poiMarkers]);
       }
@@ -97,7 +95,7 @@ const MapComponent: React.FC = () => {
     <div className="w-full">
       <GoogleMap
         mapContainerStyle={defaultMapContainerStyle}
-        center={defaultMapCenter}
+        center={userLocation || { lat: 43.6532, lng: -79.3832 }}  // Default center if no user location
         zoom={defaultMapZoom}
         options={defaultMapOptions}
         onLoad={onLoad}
@@ -107,6 +105,7 @@ const MapComponent: React.FC = () => {
             key={index}
             position={marker.position}
             onClick={() => setSelectedPlace(marker)}
+            icon={marker.icon}
           />
         ))}
         {selectedPlace && (
@@ -117,9 +116,9 @@ const MapComponent: React.FC = () => {
             <div>{selectedPlace.name}</div>
           </InfoWindow>
         )}
-        {currentPosition && (
+        {userLocation && (
           <Marker
-            position={currentPosition}
+            position={userLocation}
             icon="https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
           />
         )}
@@ -128,4 +127,38 @@ const MapComponent: React.FC = () => {
   );
 };
 
-export default MapComponent;
+const TestGeolocation: React.FC = () => {
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.error("Error getting user location: ", error);
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser");
+    }
+  };
+
+  return (
+    <>
+      <button onClick={getUserLocation}>Get User Location</button>
+      {userLocation && (
+        <div>
+          <h2>User Location</h2>
+          <p>Latitude: {userLocation.lat}</p>
+          <p>Longitude: {userLocation.lng}</p>
+        </div>
+      )}
+      <MapComponent userLocation={userLocation} />
+    </>
+  );
+};
+
+export default TestGeolocation;
