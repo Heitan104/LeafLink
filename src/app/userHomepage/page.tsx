@@ -33,6 +33,16 @@ const Page = () => {
           </p>
         </div>
 
+        {/* White Box with Text in Bottom Left */}
+        <div className="absolute bottom-4 left-4 bg-white text-black p-5 rounded-lg shadow-md">
+          <p className="text-center text-sm font-semibold">
+          About Us
+          </p>
+          <p className="text-xs mt-2">
+          tackle local deforestation in a fun way!    
+        </p>
+        </div>
+
         {/* Additional Content */}
         <div className="py-10 px-0">
             <p className="text-center text-white">
@@ -43,8 +53,8 @@ const Page = () => {
 
         <div className="flex flex-col items-center justify-center h-full text-center">
           {/* Trees Planted */}
-
         </div>
+        
       </div>
 
       {/* Add Footer */}
@@ -54,4 +64,3 @@ const Page = () => {
 }
 
 export default Page;
-// npm run dev
