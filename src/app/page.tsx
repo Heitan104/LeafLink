@@ -1,13 +1,14 @@
 import React from 'react';
+import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import Header from "@/components/ui/header";
-import Footer from "@/components/ui/footer";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 
 const Page = () => {
   return (
     <>
     {/* Header */}
-    <Header />
+    <Header handleMenuChange={() => {}}/>
     <div
     // Background Image
     className="relative min-h-screen bg-cover bg-center"
@@ -40,9 +41,11 @@ const Page = () => {
         <div className="mb-20"></div>
 
         {/* Get Started Today Button */}
-        <Button className="bg-green-900 text-white py-6 px-10 rounded">
-          Get Started Today
-        </Button>
+        <Link href="/userHomepage">
+            <Button className="bg-green-900 text-white py-6 px-10 rounded">
+              Get Started Today
+            </Button>
+        </Link>
       </div>
     </div>
 
@@ -64,3 +67,5 @@ export default function Home() {
     </MapProvider>
   );
 }
+
+// npm run dev
