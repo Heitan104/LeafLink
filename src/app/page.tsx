@@ -27,7 +27,7 @@ const UserHomepage = () => {
           <div className="mb-20"></div>
           <div className="py-16 px-4">
             <p className="text-center text-white">
-              Description Here
+            With LeafLink, plant trees nearby and make a global impact.
             </p>
           </div>
           <div className="mb-20"></div>
