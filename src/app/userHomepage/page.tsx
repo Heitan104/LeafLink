@@ -21,31 +21,25 @@ const Page = () => {
         }}
       >
         {/* Profile Picture in top left corner */}
-        <div className="absolute top-1 left-4 p-4 mt-10">
+        <div className="absolute top-1 left-0 right-0 p-4 mt-10 flex items-center justify-between px-10">
           <Image 
             src="/profilePicture.png" 
             alt="Profile Picture" 
             className="rounded-full"
             width={120} height={200} // Ensure the aspect ratio is correct
           />
-        </div>
-
-        {/* User Name */}
-        <div className="absolute top-1 left-12 p-4 mt-10">  
-        <p className="text-center text-white">
-              {/* Add more content here */}
-              Sarah K
-        </p>
+          <p className="text-center text-white text-xl">
+            Trees Planted: 5
+          </p>
         </div>
 
         {/* Additional Content */}
         <div className="py-10 px-0">
             <p className="text-center text-white">
               {/* Add more content here */}
-              Trees Planted: 5
+              Not sure
             </p>
-          </div>
-
+        </div>
 
         <div className="flex flex-col items-center justify-center h-full text-center">
           {/* Trees Planted */}
