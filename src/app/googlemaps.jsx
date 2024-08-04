@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect } from 'react';
 
 const MapComponent = () => {
@@ -15,6 +16,7 @@ const MapComponent = () => {
         async function initMap() {
             const { Map } = await google.maps.importLibrary("maps");
             const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+            console.log(PinElement);
             
             // Create a map centered on a default location
             const defaultLocation = { lat: -34.397, lng: 150.644 };
