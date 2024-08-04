@@ -1,4 +1,5 @@
 import React from 'react';
+import NavMenu from '@/components/navMenu';
 
 const Header = () => {
   return (
@@ -7,7 +8,7 @@ const Header = () => {
         User Homepage
       </div>
       <div className="text-xl">
-        
+        <NavMenu />
       </div>
     </header>
   );
