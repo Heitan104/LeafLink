@@ -10,8 +10,8 @@ const defaultMapContainerStyle = {
 };
 
 const defaultMapCenter = {
-  lat: 43.6532,
-  lng: -79.3832
+  lat: 47.02091,
+  lng: -74.72125
 };
 
 const defaultMapZoom = 15;
@@ -22,22 +22,37 @@ const defaultMapOptions = {
   gestureHandling: 'auto'
 };
 
+// Custom icons
+const parkIcon = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+const storeIcon = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
+
 const MapComponent: React.FC = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLngLiteral | null>(null);
-  const [markers, setMarkers] = useState<Array<{ position: google.maps.LatLngLiteral; name?: string }>>([]);
+  const [markers, setMarkers] = useState<Array<{ position: google.maps.LatLngLiteral; name?: string; icon: string }>>([]);
   const [selectedPlace, setSelectedPlace] = useState<{ position: google.maps.LatLngLiteral; name?: string } | null>(null);
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
 
-    const beachMarkers = [
-      { position: { lat: 43.697720, lng: -79.357467 } },
-      { position: { lat: 43.666374, lng: -79.362349 } },
-      { position: { lat: 43.690536, lng: -79.370251 } }
+    const parkMarkers = [
+      { position: { lat: 44.62957, lng: -78.50563 }, icon: parkIcon },
+      { position: { lat: 44.65706, lng: -78.55425 }, icon: parkIcon },
+      { position: { lat: 43.79082, lng: -80.03764 }, icon: parkIcon },
+      { position: { lat: 47.02856, lng: -74.74675 }, icon: parkIcon },
+      { position: { lat: 47.01706, lng: -74.74957 }, icon: parkIcon },
+      { position: { lat: 46.98853, lng: -74.74478 }, icon: parkIcon },
+      { position: { lat: 46.99606, lng: -74.71910 }, icon: parkIcon },
+      { position: { lat: 47.01031, lng: -74.74675 }, icon: parkIcon },
+      { position: { lat: 47.01706, lng: -74.69867 }, icon: parkIcon },
+      { position: { lat: 47.02185, lng: -74.68032 }, icon: parkIcon },
+      { position: { lat: 47.05096, lng: -74.68360 }, icon: parkIcon },
+      { position: { lat: 47.00679, lng: -74.77887 }, icon: parkIcon }
     ];
-    setMarkers(beachMarkers);
+    setMarkers(parkMarkers);
+  }, []);
 
+  useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -46,17 +61,23 @@ const MapComponent: React.FC = () => {
             lng: position.coords.longitude,
           };
           setCurrentPosition(pos);
-          map.setCenter(pos);
-          findPOIs(map, pos);
+          if (map) {
+            map.setCenter(pos);
+            findPOIs(map, pos);
+          }
         },
         () => {
-          handleLocationError(true, map.getCenter()!);
+          if (map) {
+            handleLocationError(true, map.getCenter()!);
+          }
         }
       );
     } else {
-      handleLocationError(false, map.getCenter()!);
+      if (map) {
+        handleLocationError(false, map.getCenter()!);
+      }
     }
-  }, []);
+  }, [map]);
 
   const findPOIs = (map: google.maps.Map, location: google.maps.LatLngLiteral) => {
     const service = new window.google.maps.places.PlacesService(map);
@@ -74,7 +95,8 @@ const MapComponent: React.FC = () => {
           .filter(result => result.geometry && result.geometry.location)
           .map(result => ({
             position: result.geometry!.location!.toJSON(),
-            name: result.name
+            name: result.name,
+            icon: storeIcon
           }));
         setMarkers(markers => [...markers, ...poiMarkers]);
       }
@@ -97,7 +119,7 @@ const MapComponent: React.FC = () => {
     <div className="w-full">
       <GoogleMap
         mapContainerStyle={defaultMapContainerStyle}
-        center={defaultMapCenter}
+        center={currentPosition || defaultMapCenter}
         zoom={defaultMapZoom}
         options={defaultMapOptions}
         onLoad={onLoad}
@@ -107,6 +129,7 @@ const MapComponent: React.FC = () => {
             key={index}
             position={marker.position}
             onClick={() => setSelectedPlace(marker)}
+            icon={marker.icon}
           />
         ))}
         {selectedPlace && (
