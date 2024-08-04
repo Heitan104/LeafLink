@@ -10,7 +10,7 @@ const UserHomepage = () => {
   return (
     <>
       {/* Header */}
-      <Header />
+      <Header title={"TerraTree24"}/>
 
       {/* Background */}
       <div
@@ -20,32 +20,30 @@ const UserHomepage = () => {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        {/* Profile Picture in top left corner */}
-        <div className="absolute top-1 left-0 right-0 p-4 mt-10 flex items-center justify-between px-10">
-          <Image 
-            src="/profilePicture.png" 
-            alt="Profile Picture" 
-            className="rounded-full"
-            width={120} height={200} // Ensure the aspect ratio is correct
-          />
-          <p className="text-center text-white text-xl">
-            Trees Planted: 5
-          </p>
-        </div>
-
-        {/* Additional Content */}
-        <div className="py-10 px-0">
-            <p className="text-center text-white">
-              {/* Add more content here */}
-              Not sure
+            <div 
+            className="absolute top-1 left-0 right-0 p-4 mt-10 flex items-center justify-between px-2 border-0 bg-green-900">
+            <Image 
+              src="/profilePicture.png" 
+              alt="Profile Picture" 
+              className="rounded-full"
+              width={120} height={200} // Ensure the aspect ratio is correct
+            />
+            {/* trees planted */}
+            <p className="text-center text-white text-xl">
+              Trees Planted: 103
             </p>
+            </div>
         </div>
-
-        <div className="flex flex-col items-center justify-center h-full text-center">
-          {/* Trees Planted */}
-
+               {/* White Box with Text in Bottom Left */}
+               <div className="absolute bottom-4 left-4 bg-white text-black p-5 rounded-lg shadow-md">
+          <p className="text-center text-sm font-semibold">
+          About Us
+          </p>
+          <p className="text-xs mt-2">
+          tackle local deforestation in a fun way!    
+        </p>
         </div>
-      </div>
+      
 
       {/* Add Footer */}
       <Footer />
@@ -54,4 +52,3 @@ const UserHomepage = () => {
 }
 
 export default UserHomepage;
-// npm run dev
